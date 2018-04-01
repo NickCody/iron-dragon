@@ -1,0 +1,370 @@
+
+===============================================================================
+Release Notes for the Iron Dragon/PC Daemon (idpcd)
+===============================================================================
+
+    This document was once updated on 9-9-99 (spooky)
+
+======================
+INTRODUCTION
+======================
+
+Version 2.01 is the first release using the new protocols 
+(see "Network Details 2.rtf")
+
+Version 0.9.1 is the first public release of the daemon. Please refer to the
+REVISION HISTORY for a complete list of changes in this version.
+
+The daemon requires a user database file called client.db. When you start the 
+daemon, you may get an error saying that the client database could not be
+located. Please locate the client.db file and configure the daemon to look
+for it where it is located. To do this, follow these steps:
+
+======================
+REVISION HISTORY
+======================
+
+Version 2.0.76 (Win32/i386 BSD/i386) : 2001-02-19
+
+	ADDED: Some minr disconnect logic. FIxed initial rank from 500 to 1000
+	DEPLOYED: 44099 (main server)
+
+Version 2.0.75 (Win32/i386 BSD/i386) : 2001-02-18
+
+	FIXED: Made block sock on all admin requests
+	DEPLOYED: 44099 (main server)
+
+Version 2.0.74 (Win32/i386 BSD/i386) : 2001-02-15
+
+	FIXED: Not sure. Deployoing current code to see what happens
+	DEPLOYED: 44099 (main server)
+
+Version 2.0.71 (Win32/i386 BSD/i386) : 2000-11-07 (election day)
+
+	FIXED: Obliterate group after ratings are received.
+	DEPLOYED: 44099 main server
+
+Version 2.0.70 (Win32/i386 BSD/i386) : 2000-11-01
+
+	FIXED: Duplicate member status sent to lobby when player first joins
+	DEPLOYED: 44099 main server
+
+Version 2.0.69 (Win32/i386 BSD/i386) : 2000-10-29
+
+	FIXED: Rank calc fix for 3 player game.
+	DEPLOYED: 44099 main server
+
+Version 2.0.68 (Win32/i386 BSD/i386) : 2000-10-23
+
+	FIXED: Major problem with players leaving a ranked setupo dialog. Other players were not notified.
+	DEPLOYED: 44100 on irondragon.org
+
+Version 2.0.67 (Win32/i386 BSD/i386) : 2000-10-22
+
+	FIXED: Backed out of some dangerous messaging changes.
+	DEPLOYED: 44100 on irondragon.org
+
+Version 2.0.66 (Win32/i386 BSD/i386) : 2000-10-09
+
+	ADDED: Flushing of log after a full stack xml tag is written
+	FIXED: Purged last remnances of old source code, many problems fixed as a result.
+	DEPLOYED: 44100 on irondragon.org
+
+Version 2.0.65 (Win32/i386 BSD/i386) : 2000-10-07
+
+	FIXED: Major ranking problem fixed. I'm surprised it worked at all. In fact, it didn't work that well.
+	       Initialize_Array was prematurely aborting and had numerous errors. Round by 5 fixed.
+		   minus credi even when won problem fixed.
+	ADDED: XML logging (first pass!)
+	DEPLOYED: 44100 on irondragon.org
+
+Version 2.0.64 (Win32/i386 BSD/i386) : 2000-10-03
+	ADDED: More error handling, reporting, reliability using references instead or pointers
+	ADDED: View as TopMost window (Win32 only)
+	FIXED: Server no longer sends quit_group_notify for ranked games
+	DEPLOYED: 44100 on irondragon.org
+
+Version 2.0.63 (Win32/i386 BSD/i386) : 2000-10-01
+
+	ADDED:    First version without connection and group pointers. This is an interim build...
+	DEPLOYED: 44100 on irondragon.org
+
+Version 2.0.62 (Win32/i386 BSD/i386) : 2000-09-24
+
+	ADDED: Full ranking support
+	DEPLOYED: 44099 on irondragon.org
+
+Version 2.0.61 (Win32/i386 BSD/i386) : ?????
+
+	CHANGED: Enabled duplicate user check
+
+Version 2.0.60 (Win32/i386 BSD/i386) : 2000-09-10
+
+	CHANGED: Tweaked busy calculations for timeout changes. Also disabled multiple 
+			 connection logic (temporarily!)
+
+Version 2.0.59 (Win32/i386 BSD/i386) : 2000-09-10
+
+	CHANGED: Decrease sleep timeout as connection load increases.
+
+Version 2.0.58 (Win32/i386 BSD/i386) : 2000-09-06
+
+	FIXED: Unknown messages are now ignored rather than causing a catastrophic failure
+
+Version 2.0.56 (Win32/i386 BSD/i386) : 2000-08-15
+
+	ADDED: Quiet flag to reduce incoming cron e-mails
+
+Version 2.0.55 (Win32/i386 BSD/i386) : 2000-08-12 (Antonio's Birthday!)
+
+	CHANGED: Use Data_Directory for logfile location
+
+Version 2.0.54 (Win32/i386 BSD/i386) : 2000-08-11
+
+	FIXED: Some new logfile logic that should fix the server restart problem
+
+Version 2.0.53 (Win32/i386 BSD/i386) : 2000-08-10
+
+	FIXED: Fixed game leader group pointer getting nulled out
+
+Version 2.0.52 (Win32/i386 BSD/i386) : 2000-08-08
+
+	FIXED: logfile problem, append did not function properly
+
+Version 2.0.51 (Win32/i386 BSD/i386) : 2000-08-08
+
+	FIXED: Problem where once game started, lobby showed group still
+
+Version 2.0.50 (Win32/i386 BSD/i386) : 2000-08-02
+
+	FIXED: Added support for AI players in ranked games. They are skipped.
+
+Version 2.0.49 (Win32/i386 BSD/i386) : 2000-08-02
+
+	FIXED: Added mem map file buffer flush and corrected the real error, another malformed loop. Damn cut and paste!
+
+Version 2.0.48 (Win32/i386 BSD/i386) : 2000-08-01
+
+	FIXED: Removed mem map file buffer flush as potential crash problem
+
+Version 2.0.47 (Win32/i386 BSD/i386) : 2000-07-31
+
+	FIXED: Winner id was off by 1
+
+Version 2.0.46 (Win32/i386 BSD/i386) : 2000-07-30
+
+	FIXED: Fixed a bad loop in the ranking code, prevented updates...
+
+Version 2.0.45 (Win32/i386 BSD/i386) : 2000-07-29
+
+	FIXED: First pass with new ranking logic using correct player_status usage...
+
+Version 2.0.44 (Win32/i386 BSD/i386) : 2000-07-25
+
+	FIXED: Edit and member no leaves list
+
+Version 2.0.43 (Win32/i386 BSD/i386) : 2000-07-25
+
+	ADDED: RC for Ranking!!!
+
+
+Version 2.0.42 (Win32/i386 BSD/i386) : 2000-07-21
+
+	ADDED: Release!
+
+Version 2.0.41 (Win32/i386 BSD/i386) : 2000-07-18
+
+	ADDED: Fixes to lobby code!
+
+Version 2.0.40 (Win32/i386 BSD/i386) : 2000-07-14
+
+	ADDED: New Lobby Code!
+
+Version 2.0.39 (Win32/i386 BSD/i386) : 2000-07-10
+
+	ADDED: Support for cgi_id.exe-style database access to prep for ranking
+
+Version 2.0.37 (Win32/i386 BSD/i386) : 2000-05-29
+
+	FIXED: Ouch, some serious network message and scrambling errors fixed.
+
+Version 2.0.36 (Win32/i386 BSD/i386) : 2000-0-10
+
+	CHANGED   : Fixed permissions problem (admins only)
+
+Version 2.0.34 (Win32/i386 BSD/i386) : 2000-0-06
+
+	CHANGED   : Changed to support final licensing logic
+
+Version 2.0.33 (Win32/i386 BSD/i386) : 2000-04-24
+
+	ADDED   : New Scramble_Bytes logic
+
+Version 2.0.32 (Win32/i386 BSD/i386) : 2000-04-02
+
+	ADDED   : Stack reporter class, useful for debugging. Define STACKREP to have it work
+
+Version 2.0.31 (Win32/i386 BSD/i386) : 2000-04-02
+
+    FIXED   : Fixed ghosting problem (disconnect from ISP and reconnect
+	          yields a player in a group with him/herself) 
+			  Solution: Disconnect duplicate joins.
+
+Version 2.0.30 (Win32/i386 BSD/i386) : 2000-04-02
+
+    FIXED   : Fixed disconnect crash server problem
+
+Version 2.0.28 (Win32/i386 BSD/i386) : 2000-04-01
+
+    FIXED   : More fixes to Option settings
+
+Version 2.0.27 (Win32/i386 BSD/i386) : 2000-03-30
+
+    FIXED   : Option settings were not getting exported correctly
+
+Version 2.0.26 (Win32/i386 BSD/i386) : 2000-03-18
+
+    NOTES   : I've been bad about maintaining this!
+	CHANGED : Separated admin connect counts from regular client connect 
+				counts.
+
+Version 2.0.17 (Win32/i386 BSD/i386) : 2000-01-16
+
+	ADDED   : new logfile code
+
+Version 2.0.16 (Win32/i386 BSD/i386) : 2000-01-14
+
+	FIXED   : Correctly notify new members of existing group status
+
+Version 2.0.15 (Win32/i386 BSD/i386) : 2000-01-14
+
+	ADDED   : Respond to LZS_START_GAME_NOTIFY
+
+Version 2.0.14 (Win32/i386) : 2000-01-14
+
+	CHANGED   : More compliance with Net doc 3
+
+Version 2.0.13 (Win32/i386) : 2000-01-14
+
+	ADDED   : New User Dialog
+	CHANGED : Reject user if not found or password not matched. We previously 
+				created the user.
+
+Version 2.0.12 (Win32/i386) : 2000-01-13
+
+	CHANGED : Failed attempt at fixing zero client_uid send in auth pkg
+
+Version 2.0.11 (Win32/i386) : 2000-01-13
+
+	ADDED    : Nulls out UID fields on errors
+
+Version 2.0.10 (Win32/i386, Cygnus/i386) : 2000-01-12
+
+	ADDED    : Support for new message tweaks and ZCS_PLAYER_ASSIGN_STATUS
+
+Version 2.0.7 (Win32 only) : 2000-01-10
+
+	Fixed    : Massaged a lot of the code, but not too many functional changes
+
+Version 2.0.6 (Win32 only) : 2000-01-10
+
+	Fixed    : Some invalid port settings and invalid byte orderings of ports
+
+Version 2.0.5 (Win32 only) : 2000-01-09
+
+	Changed  : A lot mroe UNIX compatibility, some cleanup and streamlining
+	           of messages.
+
+Version 2.0.4 (Win32 only) : 2000-01-07
+
+	Changed  : Null out messages before sending...
+
+Version 2.0.3 (Win32 only) : 2000-01-07
+
+	Added    : Options dialog : Enabled setting of Message Log options
+
+Version 2.0.2 (Win32 only) : 2000-01-06
+
+	Added    : Massive diagnostic messages
+
+Version 2.0.1 (Win32 only) : 2000-01-02
+
+	Changed  : New protocols implemented. 
+	Caveat   : LZS_PLAYER_ASSIGN_ACTION is not implemented.
+
+Version 1.1.4 (Win32, UNIX) : 1999-10-30
+
+    Requires : id_chat.exe vesion 1.0.19 or better.
+    Added    : UNIX fully supported. The server is running full-time at primordia.com
+    Changed  : Changed (Win32) to use one thread for t he daemon functions in
+                addition to the default thread for the message pump. This was done
+                to support the VServer (irondragon.org) unix, which doesn't
+                support the pthread calls.
+
+Version 1.1.3b (Win32) : 1999-10-20
+
+	Fixed: Final Packet : Game Leader ID is always 1 (for now)
+	Fixed: Final Packet : Game Type for Short-circuit is 3 (even though 
+		request was 100 (short_circuit)), since on the receive, you don't care... right?
+
+Version 1.1.2b (Win32) : 1999-10-19
+
+    Fixed   : Off-by-one error in final packet
+
+Version 1.1.1b (Win32) : 1999-10-13
+
+    Changed : MAJOR changes. New, simpler, architecture should prove much more 
+              reliable.
+
+Version 1.0.8 (Win32) : 1999-10-04
+
+    Added   : Even More debug messages, Win32 GetLastError output on database 
+              file open...
+    Changed : We first look for database files in idpcd directory, then in
+              data directory (stored in registry in Win32)
+
+Version 1.0.7 (Win32) : 1999-10-04
+
+    Added   : More debug messages
+
+Version 1.0.6 (Win32) : 1999-09-24
+
+    Added   : Dialog now supports all connection zone modes.
+	Changed : Changes some mesage id's and somemessage sizes!
+              MUST be used with id_chat version 1.0.14 or later
+
+Version 1.0.5 (Win32) : 1999-09-17
+
+	Changed : Made significant fixes to ensure overall stability.
+
+Version 1.0.4 (Win32) : 1999-09-15
+
+    FIxed     :Multiple conection voodoo phantom messages fixed
+
+Version 1.0.3 (Win32) : 1999-09-11
+
+    FIxed     : Included id_chat changes for Win95 immediate connect crash
+
+Version 1.0.2 (Win32) : 1999-09-11
+
+    Added   : Bug fixes, more chat room support, etc.
+
+Version 1.0.1 (Win32) : 1999-09-11
+
+    Added   : Chat works between 1-n players.
+    Added   : Short_Curcuit CZ *might* return valid final packets. I coded it,
+              but did not thorough;ly check it.
+    Caveats : CLIENT is responsible for closing connection once it gets what 
+              it needs from the server.
+              Net Types and Net Families are still proprietary to id_chat, 
+              Martin and I need to work out the real values for these...
+
+Version 0.9.1 (Win32) : 1999-09-10
+
+    Added   : Chat works between 1-n players.
+    Changed : n/a
+    Caveats : Standard CZ not implemented.
+              Short_Circuit game does not send correctly formed final packet
+
+(UNIX)
+Not Ready
