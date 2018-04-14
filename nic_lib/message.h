@@ -1,6 +1,6 @@
 // =---------------------------------------------------------------------------
 // message.h
-// 
+//
 //   (C) 1999 - Martin R. Szinger, Nicholas Codignotto.
 //
 //
@@ -98,10 +98,10 @@ public:
    // S e t / G e t _ A c t i v e _ M s g C h a n n e l
    //
    // =------------------------------------------------------------------------
-   uint_32 Set_Active_MsgChannels ( uint_32 nc_mask ) 
-   { 
+   uint_32 Set_Active_MsgChannels ( uint_32 nc_mask )
+   {
       uint_32 temp = Active_Channels;
-      Active_Channels = nc_mask; 
+      Active_Channels = nc_mask;
       return temp;
    }
 
@@ -115,7 +115,7 @@ public:
    uint_32 Get_Default_MsgChannel ( void ) { return Default_Channel; }
 
    // =------------------------------------------------------------------------
-   // M e s s a g e 
+   // M e s s a g e
    //
    // =------------------------------------------------------------------------
    void Message ( uint_32 channel, const char* format, ... )
@@ -196,26 +196,26 @@ public:
          Indent_String[Current_Indent] = '\0';
 
       return;
-   } 
+   }
    // =------------------------------------------------------------------------
    // S e t _ N e w l i n e _ S t r i n g
    //
    // =------------------------------------------------------------------------
-   void Set_Newline_String ( const char* ns ) 
-   { 
-      strncpy ( Newline_String, ns, NEWLINE_BYTES ); 
-      Newline_String[NEWLINE_BYTES-1] = '\0'; 
+   void Set_Newline_String ( const char* ns )
+   {
+      strncpy ( Newline_String, ns, NEWLINE_BYTES );
+      Newline_String[NEWLINE_BYTES-1] = '\0';
    }
 
    // =------------------------------------------------------------------------
    // S e t _ B u f f e r _ B y t e s
    //
    // =------------------------------------------------------------------------
-   void Set_Buffer_Bytes ( uint_32 size ) 
-   { 
-      if ( size && size != Out_Buffer_Bytes ) 
-      { 
-         Out_Buffer_Bytes = size; 
+   void Set_Buffer_Bytes ( uint_32 size )
+   {
+      if ( size && size != Out_Buffer_Bytes )
+      {
+         Out_Buffer_Bytes = size;
          delete [] Out_Buffer;
          Out_Buffer = new char[Out_Buffer_Bytes];
       }
@@ -288,14 +288,14 @@ protected:
 // Stdout_Sink - Simple stdout
 //
 // =---------------------------------------------------------------------------
-class Stdout_Sink : public MessageSink 
+class Stdout_Sink : public MessageSink
 {
 public:
    Stdout_Sink( ) {}
 
    virtual void Output ( const char* buf )
    {
-      printf ( buf );
+      printf ( "%s", buf );
    }
 };
 
@@ -303,10 +303,10 @@ public:
 // File_Sink - Simple stdout
 //
 // =---------------------------------------------------------------------------
-class File_Sink : public MessageSink 
+class File_Sink : public MessageSink
 {
 public:
-   File_Sink( ) 
+   File_Sink( )
    {
       Outfile = 0;
    }
@@ -321,7 +321,7 @@ public:
       if ( Outfile > 0 )
       {
          SS_File_IO_Write ( Outfile, (uint_08*)buf, strlen(buf) );
-         SS_File_IO_Flush ( Outfile ); 
+         SS_File_IO_Flush ( Outfile );
       }
    }
 

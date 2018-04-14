@@ -30,7 +30,9 @@ public:
       {
          Is_Closed = true;
          Sys.Message_Indent ( -2 );
-         Sys.Message ( Channel, "</%s>", Tag ? Tag : "" );
+         //NIC2018
+         //Sys.Message ( Channel, "</%s>", Tag ? Tag : "" );
+         Sys.Message ( Channel, "</%s>", Tag);
 
          if ( Sys.Get_Active_MsgChannels() & Channel )
             Sys.Flush ( );

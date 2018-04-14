@@ -1,13 +1,13 @@
 // =---------------------------------------------------------------------------
 // b u g b a s e .c
-// 
+//
 //   (C) 1999-2001 - Martin R. Szinger, Nicholas Codignotto.
 //
 //
 //   DESCRIPTION
 //   -----------
 //
-//    Implements a generic database based on an array of structures stored on 
+//    Implements a generic database based on an array of structures stored on
 //    disk and accessed via memory-mapped files
 //
 //    For all functions, 0 means success, non-zero means failure
@@ -38,15 +38,15 @@
 
 // =---------------------------------------------------------------------------
 // S S _ D B _ I n i t i a l i z e _ M e t a S t r u c t u r e
-// 
+//
 // We accept a zero record size here so don't assume the params are valid,
 // they are sometimes used to initialize the structure to an empty state
 //
 // =---------------------------------------------------------------------------
-int SS_DB_Initialize_MetaStructure ( db_metastructure* p_ms, 
-                                     uint_32           rs, 
+int SS_DB_Initialize_MetaStructure ( db_metastructure* p_ms,
+                                     uint_32           rs,
                                      uint_32           as,
-                                     uint_32           hs 
+                                     uint_32           hs
                                    )
 {
    if ( !p_ms ) return -1;
@@ -56,7 +56,7 @@ int SS_DB_Initialize_MetaStructure ( db_metastructure* p_ms,
    p_ms->cbSize            = sizeof(db_metastructure);
    p_ms->record_size       = rs;
    p_ms->db_win32_filemap  = 0;     // Unused in UNIX, but requires in subsystem params
-   p_ms->p_header          = 0;       
+   p_ms->p_header          = 0;
    p_ms->db_file           = 0;
    p_ms->p_record_count    = 0;
    p_ms->alloc_size        = as;
@@ -79,14 +79,14 @@ int SS_DB_Create ( db_metastructure* p_ms, const char* path, const char* filenam
 
    if ( !SS_DB_Is_Initialized(p_ms) ) return -1;
    if ( SS_DB_Is_Open(p_ms) ) return -1;
-   
+
    // TODO: Find out why write permissions do not take for
    // 'group' and 'other'
 
    SS_File_Full_Path ( fullpath, path, filename );
 
    p_ms->db_file = SS_File_IO_Create ( fullpath );
-   
+
    if ( p_ms->db_file == -1 )
    {
       res = -1;
@@ -102,12 +102,12 @@ int SS_DB_Create ( db_metastructure* p_ms, const char* path, const char* filenam
       else
       {
          SS_Port_ZeroMemory ( initial_bytes, p_ms->alloc_size );
-         
+
          writ = SS_File_IO_Write ( p_ms->db_file, initial_bytes, p_ms->alloc_size );
-	 
+
          SS_Port_FreeMem ( initial_bytes );
          initial_bytes = 0;
-      
+
          // if we did not write out 4 bytes, something went wrong and we need
          // to report the error here
          //
@@ -140,12 +140,12 @@ int SS_DB_Open ( db_metastructure* p_ms, const char* path, const char* filename 
    SS_File_Full_Path ( fullpath, path, filename );
 
    p_ms->db_file = SS_File_IO_Open ( fullpath, 0 /*readonly*/ );
-   
+
    if ( p_ms->db_file == -1 )
    {
    // #if WIN32
    //       Report_Win32LastError ( "Database_Open_Error", GetLastError() );
-   // #endif          
+   // #endif
    //       return RS_BADFILE;
    //   SS_HTML_WriteP ( "Failure to open: path=%s, filename=%s, fullpath=%s",
    //      path, filename, fullpath );
@@ -165,7 +165,7 @@ int SS_DB_Open ( db_metastructure* p_ms, const char* path, const char* filename 
 
    p_ms->p_header = (uint_08*)
       SS_File_IO_Map ( p_ms->db_file, &p_ms->db_win32_filemap, p_ms->db_stat.st_size );
-   
+
    if ( p_ms->p_header == (uint_08*)MAP_FAILED )
    {
       //SS_HTML_WriteP ( "SS_File_IO_Map failed: p_ms->db_file=%d, p_ms->db_win32_filemap=%d",
@@ -175,7 +175,7 @@ int SS_DB_Open ( db_metastructure* p_ms, const char* path, const char* filename 
       p_ms->db_file = 0;
       return -1;
    }
-   
+
    // the first 32-bits of every database contains the number
    // of records
 
@@ -206,7 +206,7 @@ int SS_DB_Create_Open ( db_metastructure* p_ms, const char* path, const char* fi
    SS_File_Full_Path ( fullpath, path, filename );
 
    file = SS_File_IO_Open ( fullpath, 0 /*readonly*/ ); // O_RDONLY
-   
+
    if ( file != -1 )
    {
       SS_File_IO_Close ( file );
@@ -232,7 +232,7 @@ int SS_DB_Close ( db_metastructure* p_ms )
    p_ms->p_header = 0;
 
    SS_File_IO_Close ( p_ms->db_file );
-   
+
    SS_DB_Initialize_MetaStructure ( p_ms, 0, 0, 0 );
 
    return 0;
@@ -245,9 +245,13 @@ int SS_DB_Is_Open ( db_metastructure* p_ms )
 {
    if ( !SS_DB_Is_Initialized(p_ms) ) return 0;
 
+   //NIC2018
+   //return   ( p_ms->cbSize == sizeof(db_metastructure) )
+   //      && ( p_ms->p_header > 0 )
+   //      && ( p_ms->db_file > 0 );
    return   ( p_ms->cbSize == sizeof(db_metastructure) )
-         && ( p_ms->p_header > 0 ) 
-         && ( p_ms->db_file > 0 );
+         && ( (unsigned long)p_ms->p_header > 0 )
+         && ( (unsigned long)p_ms->db_file > 0 );
 }
 
 // =---------------------------------------------------------------------------
@@ -321,20 +325,20 @@ int SS_DB_Expand_File ( db_metastructure* p_ms, uint_32 expand_bytes )
 
    // first we have to unmap the file bacause we need
    // to map the newly allocated file area afterwards
-   
+
    ret = SS_File_IO_Unmap ( p_ms->p_header, p_ms->db_win32_filemap, p_ms->db_stat.st_size );
 
    if ( ret == -1 ) return -1;
-   
+
    // create a buffer to use in expanding the file
    // then expand the file
 
    p_slush = (uint_08*)SS_Port_AllocMem ( expand_bytes );
-   
+
    if ( !p_slush ) return -1;
 
    SS_Port_ZeroMemory ( p_slush, expand_bytes );
-   
+
    ret = SS_File_IO_Seek  ( p_ms->db_file, 0, SEEK_END );
    ret = SS_File_IO_Write ( p_ms->db_file, p_slush, expand_bytes );
 
@@ -342,23 +346,23 @@ int SS_DB_Expand_File ( db_metastructure* p_ms, uint_32 expand_bytes )
    p_slush = 0;
 
    if ( ret != (int)expand_bytes ) return -1;
-   
+
    // update our notion of how big the file is
 
    SS_File_IO_Stat ( p_ms->db_file, &p_ms->db_stat );
-   
+
    // now we can remap the file based on the new size
-   
+
    p_ms->p_header = (uint_08*)
       SS_File_IO_Map ( p_ms->db_file, &p_ms->db_win32_filemap, p_ms->db_stat.st_size );
-   
+
    if ( p_ms->p_header == (uint_08*)MAP_FAILED )
    {
       SS_File_IO_Close ( p_ms->db_file );
       p_ms->db_file = 0;
       return -1;
    }
-   
+
    // reset where record count gets its data from
    //
    p_ms->p_record_count = (uint_32*)p_ms->p_header;
@@ -435,8 +439,8 @@ int SS_DB_Delete_Record ( db_metastructure* p_ms, uint_32 recnum )
 
    if ( recnum < SS_DB_Get_Record_Count(p_ms)-1 )
    {
-      memcpy ( p_ms->p_records + p_ms->record_size*recnum, 
-               p_ms->p_records + p_ms->record_size*(recnum+1), 
+      memcpy ( p_ms->p_records + p_ms->record_size*recnum,
+               p_ms->p_records + p_ms->record_size*(recnum+1),
                p_ms->record_size * (SS_DB_Get_Record_Count(p_ms)-recnum-1) );
    }
 
@@ -461,7 +465,7 @@ int SS_DB_Add_Record ( db_metastructure* p_ms, void* p_rec, uint_32* p_recnum )
    if ( !p_recnum ) return -1;
 
    // if the addition of one record (Record_Size()) plus the total
-   // space used by the header and all records is less than the 
+   // space used by the header and all records is less than the
    //
    if ( SS_DB_Header_Size(p_ms) + (SS_DB_Get_Record_Count(p_ms)+1) * p_ms->record_size > (uint_32)p_ms->db_stat.st_size )
    {
@@ -478,7 +482,7 @@ int SS_DB_Add_Record ( db_metastructure* p_ms, void* p_rec, uint_32* p_recnum )
 }
 
 // =---------------------------------------------------------------------------
-// S S _ D B _ F l u s h 
+// S S _ D B _ F l u s h
 //
 // =---------------------------------------------------------------------------
 int SS_DB_Flush ( db_metastructure* p_ms )

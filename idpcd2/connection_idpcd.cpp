@@ -1,6 +1,6 @@
 // =---------------------------------------------------------------------------
 // c o n n e c t i o n _i d p c d . c p p
-// 
+//
 //   (C) 1999-2000 - Martin R. Szinger, Nicholas Codignotto.
 //
 //
@@ -78,7 +78,7 @@ int Rating_QSort ( const void* elem1, const void* elem2 )
 }
 
 // =---------------------------------------------------------------------------
-// (public, ctor) 
+// (public, ctor)
 //
 // =---------------------------------------------------------------------------
 connection_idpcd::connection_idpcd ( bool Dummy )
@@ -155,7 +155,7 @@ _result connection_idpcd::On_Message ( message_package& pkg )
             break;
          }
 
-         case CZS_AUTHENTICATE_REQUEST : 
+         case CZS_AUTHENTICATE_REQUEST :
             res = Handle_Authenticate_Request ( pkg );
             break;
 
@@ -197,9 +197,9 @@ _result connection_idpcd::On_Message ( message_package& pkg )
          default:
             res = Handle_Unknown_Message ( pkg );
       }
-   } 
+   }
 
-   Sys.Message_Indent ( -2 ); // reverse extra indenting 
+   Sys.Message_Indent ( -2 ); // reverse extra indenting
 
    return res;
 }
@@ -228,7 +228,7 @@ void connection_idpcd::Clear_Connection ( bool just_init, bool Dummy )
    {
       idpcd_group& Group = Get_Group();
 
-      if ( !Group.Is_Dummy() ) 
+      if ( !Group.Is_Dummy() )
       {
          uint_16 Idx = Busy_Pool.Get_Connection_Index ( *this );
 
@@ -343,14 +343,14 @@ _result connection_idpcd::Handle_Authenticate_Request ( message_package& pkg )
       Client_Authenticated = 0;
       Pending_Reverse_Connect_Attempt = 0;
       Send_Authenticate_Reply ( "Outdated Game Detected. Please download latest.", 0, 0, 0 );
-      
+
       return RS_ERR; // returning an error here should disconnect the client
    }
 
    // Lookup user in the database
    //
    uint_32 recnum;
- 
+
    Sys.Message ( CHANNEL_CONNECTIONLOG, "<handle>%s</handle>", p_msg->User_Handle );
    Sys.Message ( CHANNEL_CONNECTIONLOG, "<player>%s</player>", p_msg->Default_Player_Name );
 
@@ -365,7 +365,7 @@ _result connection_idpcd::Handle_Authenticate_Request ( message_package& pkg )
       Client_Authenticated = 0;
       Pending_Reverse_Connect_Attempt = 0;
       Send_Authenticate_Reply ( "The Username could not be found.", 0, 0, 0 );
-      
+
       return RS_ERR; // returning an error here should disconnect the client
    }
 
@@ -406,7 +406,7 @@ _result connection_idpcd::Handle_Authenticate_Request ( message_package& pkg )
       Send_Authenticate_Reply ( "Username ok, but password was bad.", 0, 0, 0 );
 
       // returning an error here should disconnect the client
-      return RS_ERR; 
+      return RS_ERR;
    }
 
    // Store the user's auth info, which contains reverse connect port, license info, etc.
@@ -429,14 +429,14 @@ _result connection_idpcd::Handle_Authenticate_Request ( message_package& pkg )
    // Update Counter for number of Authenticated users
    //
    Busy_Pool.Inc_Authenticated ( Is_Back_End_Operator() );
-   
+
    // Update the user's Connect count
    //
    client_record cr;
    SS_DB_Get_Record ( &Client_MS, recnum, &cr );
    cr.connects = htonl ( ntohl ( Get_Client_Rec().connects ) + 1 );
    SS_DB_Set_Record ( &Client_MS, recnum, &cr );
-   
+
    return RS_OK;
 }
 
@@ -459,13 +459,13 @@ _result connection_idpcd::Handle_Join_Group_Request ( message_package& pkg )
    //
    uint_16 Find_Group_Index;
    uint_08 Reply_Code = Group_Pool.Find_Group ( p_msg->Game_Module,
-                                                p_msg->Group_Name, 
-                                                p_msg->Group_Password, 
+                                                p_msg->Group_Name,
+                                                p_msg->Group_Password,
                                                 Reverse_Connect_Succeeded /*leader ok*/,
                                                 p_msg->Is_Ranked != 0,
                                                 *this,
                                                 Find_Group_Index );
-   
+
    if ( Reply_Code == FGSTATUS_OK )
    {
 
@@ -523,7 +523,7 @@ _result connection_idpcd::Handle_Quit_Group_Request ( message_package& pkg )
 
    idpcd_group& Group = Get_Group();
 
-   if ( !Group.Is_Dummy() ) 
+   if ( !Group.Is_Dummy() )
    {
       uint_16 Group_UID         = Group.Get_Group_UID();
       uint_16 Current_Group_UID = Make_Hardware_Word(p_msg->Current_Group_UID);
@@ -554,9 +554,9 @@ _result connection_idpcd::Handle_Quit_Group_Request ( message_package& pkg )
 
       message_package pkg_out ( (uint_08*)&gsn );
       NM_Write_Header ( &pkg_out.hdr, sizeof(nm_zcs_quit_group_notify) );
-      
+
       res = Scramble_Bytes ( pkg_out.p_data, sizeof(nm_zcs_quit_group_notify), IDPCD_SCRAMBLE_KEY );
-      
+
       if ( RSUCCEEDED(res) ) res = Send_Message ( pkg_out );
 
       // If they were in a non-lobby group Add them to the lobby now
@@ -565,7 +565,7 @@ _result connection_idpcd::Handle_Quit_Group_Request ( message_package& pkg )
       {
          uint_08 Slot;
          res = Group_Pool.Get_Lobby().Add_Connection ( PoolIdx, Slot );
-         
+
          if ( RSUCCEEDED(res) )
          {
             res = Group_Pool.Get_Lobby().Broadcast_Group_Member_Status ( Slot, 1, *this );
@@ -588,11 +588,11 @@ _result connection_idpcd::Handle_Quit_Group_Request ( message_package& pkg )
 // (public) H a n d l e _ T e x t _ C h a t
 //
 // =---------------------------------------------------------------------------
-_result connection_idpcd::Handle_Text_Chat ( message_package& pkg ) 
+_result connection_idpcd::Handle_Text_Chat ( message_package& pkg )
 {
    idpcd_group& Group = Get_Group();
 
-   if ( !Group.Is_Dummy() ) 
+   if ( !Group.Is_Dummy() )
    {
       Group.Broadcast_To_Targets ( pkg );
    }
@@ -620,7 +620,7 @@ _result connection_idpcd::Handle_Admin_Request ( message_package& pkg )
       {
          uint_32 busyc, freec;
          Busy_Pool.Num_Connections ( busyc, freec );
-         
+
          uint_32 normg, freeg;
          Group_Pool.Num_Groups ( normg, freeg );
 
@@ -754,7 +754,7 @@ _result connection_idpcd::Handle_Admin_Request ( message_package& pkg )
             if (sent != sizeof(ur)) {
                Sys.Message ( CHANNEL_ERRORLOG, "<error>Sending user to admin, ur size was %d instead of %d. Loop iteration %d in %d-%d.",
                 sent, (int)sizeof(ur), (int)i, (int)start, (int)end);
-                
+
                break;
             }
 
@@ -764,7 +764,7 @@ _result connection_idpcd::Handle_Admin_Request ( message_package& pkg )
 
          break;
       }
-      
+
       case BIDIR_ADDUSER:
       {
          nm_bidir_user*   p_msg  = (nm_bidir_user*)pkg.p_data;
@@ -791,7 +791,7 @@ _result connection_idpcd::Handle_Admin_Request ( message_package& pkg )
             uint_32 recnum;
             res = (_result)SS_DB_Add_Record ( &Client_MS, &p_user->record, &recnum );
 
-            if ( RSUCCEEDED(res) ) 
+            if ( RSUCCEEDED(res) )
             {
                p_msg->Success_Code =  0;
                Find_Client_By_Username ( p_user->record.username, recnum );
@@ -811,7 +811,7 @@ _result connection_idpcd::Handle_Admin_Request ( message_package& pkg )
 
          break;
       }
-      
+
       case BIDIR_SETUSER:
       {
          nm_bidir_user*  p_msg  = (nm_bidir_user*)pkg.p_data;
@@ -831,7 +831,7 @@ _result connection_idpcd::Handle_Admin_Request ( message_package& pkg )
          //
          uint_08 Password[PASSWORD_BYTES];
          memcpy ( Password, cr.password, PASSWORD_BYTES );
-         
+
          memcpy ( &cr, &p_user->record, sizeof(client_record) );
 
          if ( p_user->record.password[0] == '\0' )
@@ -920,7 +920,7 @@ _result connection_idpcd::Handle_Unknown_Message ( message_package& pkg )
 _result connection_idpcd::Handle_Smackdown ( message_package& pkg )
 {
    //nm_any_smackdown* p_as = (nm_any_smackdown*)pkg.p_data;
-   
+
    // Unscramble Message
    //
    _result res = Scramble_Bytes ( pkg.p_data, NM_Payload_Length(&pkg.hdr), pkg.hdr.Scramble_Key );
@@ -930,7 +930,7 @@ _result connection_idpcd::Handle_Smackdown ( message_package& pkg )
 }
 
 // =---------------------------------------------------------------------------
-// (public) P e r f o r m _ R e v e r s e _ C o n n e c t 
+// (public) P e r f o r m _ R e v e r s e _ C o n n e c t
 //
 // =---------------------------------------------------------------------------
 _result connection_idpcd::Perform_Reverse_Connect  ( void )
@@ -951,7 +951,7 @@ _result connection_idpcd::Perform_Reverse_Connect  ( void )
       Pending_Reverse_Connect_Attempt = 0;
    }
    // otherwise, attempt the reverse connect
-   else 
+   else
    {
       // create an unnamed socket for the reverse connect
       //
@@ -965,7 +965,9 @@ _result connection_idpcd::Perform_Reverse_Connect  ( void )
       //
       sockaddr_in Client_Addr;
       int namelen = sizeof(sockaddr_in);
-      getpeername ( Conn_Sock, (sockaddr*)&Client_Addr, &namelen );
+      //NIC2018
+      //getpeername ( Conn_Sock, (sockaddr*)&Client_Addr, &namelen );
+      getpeername ( Conn_Sock, (sockaddr*)&Client_Addr, (unsigned int*)&namelen );
 
       // Auth_Info's port is already in network byte order
       //
@@ -979,7 +981,7 @@ _result connection_idpcd::Perform_Reverse_Connect  ( void )
       // Try and connect
       //
       int ret = connect ( RC_Sock, (sockaddr*)&Client_Addr, sizeof(Client_Addr) );
-   
+
       if ( ret == SOCKET_ERROR )
       {
          // Handle passthrough case
@@ -1017,7 +1019,7 @@ _result connection_idpcd::Perform_Reverse_Connect  ( void )
 
    _result res = RS_OK;
 
-   // Now, send authenmtication reply only if there are no more pending 
+   // Now, send authenmtication reply only if there are no more pending
    // reverse connects
    //
    if ( !Pending_Reverse_Connect_Attempt )
@@ -1106,7 +1108,7 @@ _result connection_idpcd::Send_Authenticate_Reply ( const char* msg, uint_08 aut
 
 
 // =---------------------------------------------------------------------------
-// (public, virtual) R e p o r t _ C o n n e c t i o 
+// (public, virtual) R e p o r t _ C o n n e c t i o
 //
 // Derived classes should call this base implementation first
 //
@@ -1183,7 +1185,7 @@ _result connection_idpcd::Send_Join_Group_Reply ( uint_08 rc, uint_16 Group_Inde
       gsn.Group_UID[1] = LSB ( Join_Group.Get_Group_UID() );
       strcpy ( gsn.Group_Name, Join_Group.Get_Group_Name() );
       strcpy ( gsn.Group_Password, Join_Group.Get_Group_Password() );
-   
+
       *(uint_16*)gsn.GL_IP_Port    = Join_Group.Get_Game_Leader().Get_Auth_Inbound_Port();
       *(uint_32*)gsn.GL_IP_Address = Join_Group.Get_Game_Leader().Get_IP_Address();
       gsn.Is_Ranked = Join_Group.Is_Ranked();

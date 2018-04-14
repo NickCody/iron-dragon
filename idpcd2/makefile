@@ -27,8 +27,8 @@ OBJS   = BSD/main.o \
 
 LIBS   = 
 INCL   = -I../nic_lib
-#CFLAGS = -Wall -pedantic -DUNIX $(INCL)
-CFLAGS = -fhandle-exceptions -DUNIX $(INCL)
+CFLAGS = -Wall -pedantic -DUNIX $(INCL)
+#CFLAGS = -fhandle-exceptions -DUNIX $(INCL)
 
 BSD/main.o: main.cpp
 	$(CC) $(CFLAGS) -c -o BSD/main.o main.cpp

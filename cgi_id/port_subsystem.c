@@ -1,12 +1,12 @@
 // =---------------------------------------------------------------------------
 // p o r t  _ s u b s y s t e m . h
-// 
+//
 //   (C) 1999-2000 - Martin R. Szinger, Nicholas Codignotto.
 //
 //
 //   DESCRIPTION
 //   -----------
-//    
+//
 //
 //   WIN32 IMPLEMENTATION NOTES
 //   --------------------------
@@ -26,7 +26,7 @@
 #include "port_subsystem.h"
 
 #include <time.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -70,7 +70,7 @@ Month_Struct Months[12] = { {"Jan", "January"},
                             {"Dec", "December"} };
 
 // =---------------------------------------------------------------------------
-// S S _ P o r t _ S t r c p y _ L e n 
+// S S _ P o r t _ S t r c p y _ L e n
 //
 // Useful for copying fixed-length strings that comes with padded nulls to end
 //
@@ -78,7 +78,7 @@ char* SS_Port_Strcpy_Len ( char* dest, const char * const src, uint_32 dest_size
 {
    char*   res = 0;
    uint_32 copy_len = strlen(src);
-   
+
    if ( copy_len > dest_size-1 )
       copy_len = dest_size-1;
 
@@ -114,7 +114,7 @@ int SS_Port_Process_Id ( void )
 
 #elif WIN32
 
-   // Not very meaningful in Win32, since the handle is only valid in 
+   // Not very meaningful in Win32, since the handle is only valid in
    // the context of this process, usually -1. DuplicateHandle is needed to
    // get at a process id that is valid in the context of other processes.
    return (int)GetCurrentProcess();
@@ -156,7 +156,7 @@ void SS_Port_Get_DateTime_String ( char* buf )
 #endif
 
    time( &ltime );
-    
+
    gmt = gmtime( &ltime );
 
    out = asctime( gmt );
@@ -167,10 +167,10 @@ void SS_Port_Get_DateTime_String ( char* buf )
 }
 
 // =---------------------------------------------------------------------------
-// S S _ P o r t _ D a t e T i m e _ T o _ D a y M o n t h Y e a r 
+// S S _ P o r t _ D a t e T i m e _ T o _ D a y M o n t h Y e a r
 //           1         2
 // 012345678901234567890123456789
-// Wed May 10 09:58:44 2000 GMT 
+// Wed May 10 09:58:44 2000 GMT
 // =---------------------------------------------------------------------------
 void SS_Port_DateTime_To_DayMonThYear ( const char* DateTime, int* p_Day, int* p_Month, int* p_Year )
 {
@@ -196,18 +196,18 @@ void  SS_Port_DateTime_To_Short_Date ( char* Short_Buf, const char* DateTime )
 
    // We might have a blank input string
    //
-   if ( strlen(DateTime) == 0 ) 
-   { 
-      Short_Buf[0] = 0; 
-      return; 
+   if ( strlen(DateTime) == 0 )
+   {
+      Short_Buf[0] = 0;
+      return;
    }
 
    // We might have a short-date input string
    //
-   if ( strlen(DateTime) < 20 ) 
-   { 
-      strcpy ( Short_Buf, DateTime ); 
-      return; 
+   if ( strlen(DateTime) < 20 )
+   {
+      strcpy ( Short_Buf, DateTime );
+      return;
    }
 
    // Regular processing...
@@ -241,7 +241,7 @@ int SS_Port_Month_To_Number ( const char* Month )
 
 
 // =---------------------------------------------------------------------------
-// S S _ P o r t _ A l l o c M e m 
+// S S _ P o r t _ A l l o c M e m
 // =---------------------------------------------------------------------------
 void* SS_Port_AllocMem ( int size )
 {
@@ -303,11 +303,11 @@ int Unix_Daemon_Init ( const char* pname )
    // Install signal handler for dead children processing
    //
    //if ( !Signal ( SIGCHLD, Signal_Child ) )
-   //   return RS_BADSIGNAL;   
+   //   return RS_BADSIGNAL;
 
    if ( (pid=fork()) != 0 )
        exit(0);
-   
+
    setsid();
 
    //if ( !Signal ( SIGHUP, SIG_IGN ) )
@@ -315,14 +315,14 @@ int Unix_Daemon_Init ( const char* pname )
 
    if ( (pid = fork()) != 0 )
        exit(0);
-   
+
    //chdir ( "/" );
 
    umask ( 0 );
-   
+
    for ( i=0; i < MAXFD; i++ )
       close(i);
-   
+
    return 0;
 }
 
@@ -337,27 +337,27 @@ int Unix_Daemon_Init ( const char* pname )
 Sigfunc* Signal ( int signo, Sigfunc* func )
 {
    Sigfunc* sigfunc;
-   
+
    if ( (sigfunc = signal(signo, func)) == SIG_ERR)
       return 0;
-   
+
    return ( sigfunc );
 }
 
 // =---------------------------------------------------------------------------
 // (global) s i g n a l
-// 
+//
 // Compliments W. Richard Stevens, "UNIX Network Programming"
 // =---------------------------------------------------------------------------
 
 Sigfunc* signal ( int signo, Sigfunc* func )
 {
    struct sigaction act, oact;
-   
+
    act.sa_handler = func;
    sigemptyset ( &act.sa_mask );
    act.sa_flags = 0;
-   
+
    if ( signo == SIGALRM )
    {
       #ifdef SA_INTERRUPT
@@ -370,17 +370,17 @@ Sigfunc* signal ( int signo, Sigfunc* func )
       act.sa_flags |= SA_RESTART;          // SVR4, 4.4BSD
       #endif
    }
-   
+
    if ( sigaction(signo, &act, &oact) < 0 )
       return ( SIG_ERR );
-   
+
    return oact.sa_handler;
 }
 
 // =---------------------------------------------------------------------------
 // (global signal handler) S i g n a l _ C h i l d
 // =---------------------------------------------------------------------------
-void Signal_Child ( int x ) 
+void Signal_Child ( int x )
 {
    while ( 0 != waitpid( 0, 0, WNOHANG));
 }
