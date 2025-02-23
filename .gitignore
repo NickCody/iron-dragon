@@ -4,3 +4,7 @@ idpcd2/BSD
 idpcd2/tmpdep
 logs/
 daemon/
+backups/
+build/
+data/
+www/cgi-bin/

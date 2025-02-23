@@ -22,6 +22,7 @@
 #include "cgi_id_subsystems.h"
 #include "license_manager.h"
 #include "databases.h"
+#include <string.h>
 
 // =---------------------------------------------------------------------------
 // Forward declarations

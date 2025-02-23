@@ -61,16 +61,16 @@ extern Month_Struct Months[];
 // typedefs
 //
 // ----------------------------------------------------------------------------
-#ifdef __cplusplus
-extern "C" 
-{
-#endif
-typedef void Sigfunc ( int );
-Sigfunc* signal ( int signo, Sigfunc* func );
-Sigfunc* Signal ( int signo, Sigfunc* func );
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// extern "C" 
+// {
+// #endif
+// typedef void Sigfunc ( int );
+// Sigfunc* signal ( int signo, Sigfunc* func );
+// Sigfunc* Signal ( int signo, Sigfunc* func );
+// #ifdef __cplusplus
+// }
+// #endif
 
 int Unix_Daemon_Init     ( const char* pname );
 

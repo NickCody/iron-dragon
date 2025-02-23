@@ -312,7 +312,7 @@ int Unix_Daemon_Init ( const char* pname )
 
    umask ( 0 );
    
-   for ( int i=0; i < MAXFD; i++ )
+   for ( int i=0; i < 256 /*MAXFD*/; i++ )
       close(i);
    
    return 0;
@@ -326,15 +326,15 @@ int Unix_Daemon_Init ( const char* pname )
 // Compliments W. Richard Stevens, "UNIX Network Programming"
 // =---------------------------------------------------------------------------
 
-Sigfunc* Signal ( int signo, Sigfunc* func )
-{
-   Sigfunc* sigfunc;
+// Sigfunc* Signal ( int signo, Sigfunc* func )
+// {
+//    Sigfunc* sigfunc;
    
-   if ( (sigfunc = signal(signo, func)) == SIG_ERR)
-      return 0;
+//    if ( (sigfunc = signal(signo, func)) == SIG_ERR)
+//       return 0;
    
-   return ( sigfunc );
-}
+//    return ( sigfunc );
+// }
 
 // =---------------------------------------------------------------------------
 // (global) s i g n a l
@@ -342,32 +342,32 @@ Sigfunc* Signal ( int signo, Sigfunc* func )
 // Compliments W. Richard Stevens, "UNIX Network Programming"
 // =---------------------------------------------------------------------------
 
-Sigfunc* signal ( int signo, Sigfunc* func )
-{
-   struct sigaction act, oact;
+// Sigfunc* signal ( int signo, Sigfunc* func )
+// {
+//    struct sigaction act, oact;
    
-   act.sa_handler = func;
-   sigemptyset ( &act.sa_mask );
-   act.sa_flags = 0;
+//    act.sa_handler = func;
+//    sigemptyset ( &act.sa_mask );
+//    act.sa_flags = 0;
    
-   if ( signo == SIGALRM )
-   {
-      #ifdef SA_INTERRUPT
-      act.sa_flags |= SA_INTERRUPT;        // SunOS 4.x
-      #endif
-   }
-   else
-   {
-      #ifdef SA_RESTART
-      act.sa_flags |= SA_RESTART;          // SVR4, 4.4BSD
-      #endif
-   }
+//    if ( signo == SIGALRM )
+//    {
+//       #ifdef SA_INTERRUPT
+//       act.sa_flags |= SA_INTERRUPT;        // SunOS 4.x
+//       #endif
+//    }
+//    else
+//    {
+//       #ifdef SA_RESTART
+//       act.sa_flags |= SA_RESTART;          // SVR4, 4.4BSD
+//       #endif
+//    }
    
-   if ( sigaction(signo, &act, &oact) < 0 )
-      return ( SIG_ERR );
+//    if ( sigaction(signo, &act, &oact) < 0 )
+//       return ( SIG_ERR );
    
-   return oact.sa_handler;
-}
+//    return oact.sa_handler;
+// }
 
 // =---------------------------------------------------------------------------
 // (global signal handler) S i g n a l _ C h i l d
